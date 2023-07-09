@@ -35,7 +35,7 @@
                                     <p>this item has no multiple images</p>
                                 @endforelse
                             </div>
-                            <a href="#" class="btn btn-warning mt-3">Edit</a>
+                            <a href="" class="btn btn-warning mt-3">Edit</a>
                             <a href="{{ route('destroy', $product->id) }}" class="btn btn-danger mt-3">Delete</a>
                         </div>
                     </div>
