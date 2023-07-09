@@ -69,6 +69,56 @@ class ProductController extends Controller
     //edit
     public function edit($id)
     {
-        dd($id);
+        $product_info = Product::where('id', $id)->first();
+        return view('edit', compact('product_info'));
+    }
+    //update
+    public function update(Request $request, $id)
+    {
+        //update thumbnail image
+        if (isset($request->thumbnail)) {
+            $old_thumbnail = $request->old_thumbnail;
+
+            $updated_thumbnail_image = $request->thumbnail;
+            $updated_thumbnail_image_name = time() . '.' . $updated_thumbnail_image->getClientOriginalExtension();
+            $updated_thumbnail_image->move(public_path('assets/images/product-images/thumbnail'), $updated_thumbnail_image_name);
+
+            unlink(public_path('assets/images/product-images/thumbnail/') . $old_thumbnail);
+
+            Product::where('id', $id)->update([
+                'thumbnail' => $updated_thumbnail_image_name,
+            ]);
+        }
+        Product::where('id', $id)->update([
+            'name' => $request->name,
+            'price' => $request->price,
+        ]);
+        //update multiple images
+        if(isset($request->image)){
+            $update_multiple_images = $request->image;
+
+            foreach ($update_multiple_images as $single_image) {
+                $single_image_name = uniqid() . '.' . $single_image->getClientOriginalExtension();
+                $single_image->move(public_path('assets/images/product-images/multiple-images'), $single_image_name);
+
+
+                $product = new Product;
+                $temporary_image = new TemporaryImage;
+                $temporary_image->product_id = $id;
+                $temporary_image->image = $single_image_name;
+                $temporary_image->save();
+            }
+        }
+        return redirect()->route('index')->with('success', 'updated');
+    }
+    // destroyThumbnail
+    public function destroyThumbnail($multi_image_id)
+    {
+        $image_name = TemporaryImage::where('id', $multi_image_id)->first()->image;
+
+        TemporaryImage::destroy($multi_image_id);
+        unlink(public_path('assets/images/product-images/multiple-images/') . $image_name);
+
+        return redirect()->back()->with('destroy', 'an image has been deleted from multiple image of this product');
     }
 }
