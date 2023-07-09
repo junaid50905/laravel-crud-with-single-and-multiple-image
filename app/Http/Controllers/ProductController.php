@@ -22,7 +22,7 @@ class ProductController extends Controller
     //store
     public function store(Request $request)
     {
-        $thumbnail = $request->thumbnail;
+        $thumbnail = $request->file('thumbnail');
         $thumbnail_name = time() . '.' . $thumbnail->getClientOriginalExtension();
         $thumbnail->move(public_path('assets/images/product-images/thumbnail'), $thumbnail_name);
 
@@ -65,5 +65,10 @@ class ProductController extends Controller
             }
         }
         return redirect()->back();
+    }
+    //edit
+    public function edit($id)
+    {
+        dd($id);
     }
 }

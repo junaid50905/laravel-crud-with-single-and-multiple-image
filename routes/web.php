@@ -21,8 +21,8 @@ Route::get('/', function () {
 
 
 Route::get('/', [ProductController::class, 'index'])->name('index');
-Route::get('/product/create', [ProductController::class, 'create'])->name('index');
+Route::get('/product/create', [ProductController::class, 'create'])->name('create');
 Route::post('/product/store', [ProductController::class, 'store'])->name('store');
-// Route::get('/edit/{id}', [SingleImageController::class, 'edit'])->name('edit');
+Route::get('/product/edit/{id}', [ProductController::class, 'edit'])->name('edit');
 // Route::post('/update/{id}', [SingleImageController::class, 'update'])->name('update');
 Route::get('/product/destroy/{id}', [ProductController::class, 'destroy'])->name('destroy');
